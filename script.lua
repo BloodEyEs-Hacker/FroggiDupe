@@ -1,173 +1,261 @@
--- FroggiDupe Money by BloodEyEs-Hacker - Дюп денег через продажу фруктов
+-- FroggiDupe Money ULTRA by BloodEyEs-Hacker - Премиум дизайн
 local Player = game:GetService("Players").LocalPlayer
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 
--- Интерфейс
+-- Создаем интерфейс
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game:GetService("CoreGui")
-ScreenGui.Name = "FroggiDupeMoney"
+ScreenGui.Name = "FroggiDupeMoneyULTRA"
 ScreenGui.ResetOnSpawn = false
 
--- Основное окно
+-- Анимация появления
 local MainFrame = Instance.new("Frame")
 MainFrame.Parent = ScreenGui
-MainFrame.Size = UDim2.new(0, 400, 0, 350)
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -175)
-MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+MainFrame.Size = UDim2.new(0, 0, 0, 0)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
 MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
 
 local MainCorner = Instance.new("UICorner")
 MainCorner.Parent = MainFrame
-MainCorner.CornerRadius = UDim.new(0, 15)
+MainCorner.CornerRadius = UDim.new(0, 20)
 
--- Градиентная обводка
-local BorderFrame = Instance.new("Frame")
-BorderFrame.Parent = MainFrame
-BorderFrame.Size = UDim2.new(1, 6, 1, 6)
-BorderFrame.Position = UDim2.new(0, -3, 0, -3)
-BorderFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-BorderFrame.ZIndex = -1
+-- Неоновая обводка
+local BorderGlow = Instance.new("Frame")
+BorderGlow.Parent = MainFrame
+BorderGlow.Size = UDim2.new(1, 8, 1, 8)
+BorderGlow.Position = UDim2.new(0, -4, 0, -4)
+BorderGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+BorderGlow.ZIndex = -1
 
 local BorderGradient = Instance.new("UIGradient")
-BorderGradient.Parent = BorderFrame
+BorderGradient.Parent = BorderGlow
 BorderGradient.Rotation = 45
 BorderGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 215, 0)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 165, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 100, 0))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 50, 50)),
+    ColorSequenceKeypoint.new(0.3, Color3.fromRGB(255, 150, 50)),
+    ColorSequenceKeypoint.new(0.6, Color3.fromRGB(50, 255, 150)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 150, 255))
 })
 
 local BorderCorner = Instance.new("UICorner")
-BorderCorner.Parent = BorderFrame
-BorderCorner.CornerRadius = UDim.new(0, 18)
+BorderCorner.Parent = BorderGlow
+BorderCorner.CornerRadius = UDim.new(0, 24)
 
--- Верхняя панель
+-- Анимация появления
+TweenService:Create(MainFrame, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    Size = UDim2.new(0, 450, 0, 500),
+    Position = UDim2.new(0.5, -225, 0.5, -250)
+}):Play()
+
+wait(0.8)
+
+-- Верхняя панель с градиентом
 local TopBar = Instance.new("Frame")
 TopBar.Parent = MainFrame
-TopBar.Size = UDim2.new(1, 0, 0, 50)
+TopBar.Size = UDim2.new(1, 0, 0, 60)
 TopBar.Position = UDim2.new(0, 0, 0, 0)
-TopBar.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+TopBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 TopBar.BorderSizePixel = 0
+
+local TopBarGradient = Instance.new("UIGradient")
+TopBarGradient.Parent = TopBar
+TopBarGradient.Rotation = 90
+TopBarGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 40)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
+})
 
 local TopBarCorner = Instance.new("UICorner")
 TopBarCorner.Parent = TopBar
-TopBarCorner.CornerRadius = UDim.new(0, 15)
+TopBarCorner.CornerRadius = UDim.new(0, 20)
+
+-- Заголовок с иконкой
+local TitleContainer = Instance.new("Frame")
+TitleContainer.Parent = TopBar
+TitleContainer.Size = UDim2.new(0, 300, 0, 60)
+TitleContainer.Position = UDim2.new(0, 15, 0, 0)
+TitleContainer.BackgroundTransparency = 1
+
+local FrogIcon = Instance.new("TextLabel")
+FrogIcon.Parent = TitleContainer
+FrogIcon.Size = UDim2.new(0, 40, 0, 40)
+FrogIcon.Position = UDim2.new(0, 0, 0, 10)
+FrogIcon.BackgroundTransparency = 1
+FrogIcon.Text = "🐸"
+FrogIcon.TextColor3 = Color3.fromRGB(0, 255, 136)
+FrogIcon.TextSize = 30
+FrogIcon.Font = Enum.Font.GothamBold
 
 local Title = Instance.new("TextLabel")
-Title.Parent = TopBar
-Title.Size = UDim2.new(0, 250, 0, 50)
-Title.Position = UDim2.new(0, 15, 0, 0)
+Title.Parent = TitleContainer
+Title.Size = UDim2.new(0, 250, 0, 60)
+Title.Position = UDim2.new(0, 45, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "💰 FROGGI MONEY DUPE"
-Title.TextColor3 = Color3.fromRGB(255, 215, 0)
+Title.Text = "FROGGI MONEY\n<font size='12'>ULTRA PREMIUM</font>"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 18
 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.RichText = true
+
+-- Кнопки управления
+local ControlsFrame = Instance.new("Frame")
+ControlsFrame.Parent = TopBar
+ControlsFrame.Size = UDim2.new(0, 100, 0, 60)
+ControlsFrame.Position = UDim2.new(1, -110, 0, 0)
+ControlsFrame.BackgroundTransparency = 1
 
 local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Parent = TopBar
-MinimizeButton.Size = UDim2.new(0, 35, 0, 35)
-MinimizeButton.Position = UDim2.new(1, -40, 0, 7)
+MinimizeButton.Parent = ControlsFrame
+MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
+MinimizeButton.Position = UDim2.new(0, 5, 0, 10)
 MinimizeButton.Text = "─"
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
 MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeButton.TextSize = 16
+MinimizeButton.TextSize = 18
 MinimizeButton.Font = Enum.Font.GothamBold
 
 local MinimizeCorner = Instance.new("UICorner")
 MinimizeCorner.Parent = MinimizeButton
-MinimizeCorner.CornerRadius = UDim.new(0, 8)
+MinimizeCorner.CornerRadius = UDim.new(0, 10)
 
--- Поле ввода суммы
-local AmountFrame = Instance.new("Frame")
-AmountFrame.Parent = MainFrame
-AmountFrame.Size = UDim2.new(1, -20, 0, 70)
-AmountFrame.Position = UDim2.new(0, 10, 0, 60)
-AmountFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-AmountFrame.BorderSizePixel = 0
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = ControlsFrame
+CloseButton.Size = UDim2.new(0, 40, 0, 40)
+CloseButton.Position = UDim2.new(0, 55, 0, 10)
+CloseButton.Text = "×"
+CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+CloseButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+CloseButton.TextSize = 20
+CloseButton.Font = Enum.Font.GothamBold
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.Parent = CloseButton
+CloseCorner.CornerRadius = UDim.new(0, 10)
+
+-- Контентная область
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Parent = MainFrame
+ContentFrame.Size = UDim2.new(1, -20, 1, -80)
+ContentFrame.Position = UDim2.new(0, 10, 0, 70)
+ContentFrame.BackgroundTransparency = 1
+
+-- Секция ввода суммы
+local AmountSection = Instance.new("Frame")
+AmountSection.Parent = ContentFrame
+AmountSection.Size = UDim2.new(1, 0, 0, 90)
+AmountSection.Position = UDim2.new(0, 0, 0, 0)
+AmountSection.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+AmountSection.BorderSizePixel = 0
 
 local AmountCorner = Instance.new("UICorner")
-AmountCorner.Parent = AmountFrame
-AmountCorner.CornerRadius = UDim.new(0, 10)
+AmountCorner.Parent = AmountSection
+AmountCorner.CornerRadius = UDim.new(0, 15)
 
-local AmountLabel = Instance.new("TextLabel")
-AmountLabel.Parent = AmountFrame
-AmountLabel.Size = UDim2.new(1, 0, 0, 25)
-AmountLabel.Position = UDim2.new(0, 0, 0, 5)
-AmountLabel.BackgroundTransparency = 1
-AmountLabel.Text = "💵 ВВЕДИТЕ СУММУ:"
-AmountLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-AmountLabel.TextSize = 14
-AmountLabel.Font = Enum.Font.GothamBold
+local AmountTitle = Instance.new("TextLabel")
+AmountTitle.Parent = AmountSection
+AmountTitle.Size = UDim2.new(1, -20, 0, 25)
+AmountTitle.Position = UDim2.new(0, 15, 0, 10)
+AmountTitle.BackgroundTransparency = 1
+AmountTitle.Text = "💵 СУММА ДЛЯ ДЮПА"
+AmountTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+AmountTitle.TextSize = 16
+AmountTitle.Font = Enum.Font.GothamBold
+AmountTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local AmountBoxContainer = Instance.new("Frame")
+AmountBoxContainer.Parent = AmountSection
+AmountBoxContainer.Size = UDim2.new(1, -20, 0, 45)
+AmountBoxContainer.Position = UDim2.new(0, 10, 0, 35)
+AmountBoxContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+AmountBoxContainer.BorderSizePixel = 0
+
+local AmountBoxCorner = Instance.new("UICorner")
+AmountBoxCorner.Parent = AmountBoxContainer
+AmountBoxCorner.CornerRadius = UDim.new(0, 10)
 
 local AmountBox = Instance.new("TextBox")
-AmountBox.Parent = AmountFrame
-AmountBox.Size = UDim2.new(1, -20, 0, 35)
-AmountBox.Position = UDim2.new(0, 10, 0, 30)
-AmountBox.PlaceholderText = "Например: 1000000"
+AmountBox.Parent = AmountBoxContainer
+AmountBox.Size = UDim2.new(1, -20, 1, -10)
+AmountBox.Position = UDim2.new(0, 10, 0, 5)
+AmountBox.PlaceholderText = "Введите сумму (например: 1000000)"
 AmountBox.Text = ""
-AmountBox.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+AmountBox.BackgroundTransparency = 1
 AmountBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 AmountBox.TextSize = 16
 AmountBox.Font = Enum.Font.Gotham
 AmountBox.ClearTextOnFocus = false
 
-local AmountBoxCorner = Instance.new("UICorner")
-AmountBoxCorner.Parent = AmountBox
-AmountBoxCorner.CornerRadius = UDim.new(0, 8)
+-- Секция выбора предмета
+local ItemSection = Instance.new("Frame")
+ItemSection.Parent = ContentFrame
+ItemSection.Size = UDim2.new(1, 0, 0, 200)
+ItemSection.Position = UDim2.new(0, 0, 0, 100)
+ItemSection.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+ItemSection.BorderSizePixel = 0
 
--- Список фруктов
-local FruitsLabel = Instance.new("TextLabel")
-FruitsLabel.Parent = MainFrame
-FruitsLabel.Size = UDim2.new(1, -20, 0, 25)
-FruitsLabel.Position = UDim2.new(0, 10, 0, 140)
-FruitsLabel.BackgroundTransparency = 1
-FruitsLabel.Text = "🍎 ВАШИ ФРУКТЫ:"
-FruitsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-FruitsLabel.TextSize = 14
-FruitsLabel.Font = Enum.Font.GothamBold
+local ItemCorner = Instance.new("UICorner")
+ItemCorner.Parent = ItemSection
+ItemCorner.CornerRadius = UDim.new(0, 15)
 
-local FruitsList = Instance.new("ScrollingFrame")
-FruitsList.Parent = MainFrame
-FruitsList.Size = UDim2.new(1, -20, 0, 100)
-FruitsList.Position = UDim2.new(0, 10, 0, 170)
-FruitsList.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-FruitsList.BorderSizePixel = 0
-FruitsList.ScrollBarThickness = 6
-FruitsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+local ItemTitle = Instance.new("TextLabel")
+ItemTitle.Parent = ItemSection
+ItemTitle.Size = UDim2.new(1, -20, 0, 25)
+ItemTitle.Position = UDim2.new(0, 15, 0, 10)
+ItemTitle.BackgroundTransparency = 1
+ItemTitle.Text = "🎒 ВАШ ИНВЕНТАРЬ"
+ItemTitle.TextColor3 = Color3.fromRGB(0, 255, 136)
+ItemTitle.TextSize = 16
+ItemTitle.Font = Enum.Font.GothamBold
+ItemTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-local FruitsCorner = Instance.new("UICorner")
-FruitsCorner.Parent = FruitsList
-FruitsCorner.CornerRadius = UDim.new(0, 8)
+local ItemsList = Instance.new("ScrollingFrame")
+ItemsList.Parent = ItemSection
+ItemsList.Size = UDim2.new(1, -20, 0, 140)
+ItemsList.Position = UDim2.new(0, 10, 0, 40)
+ItemsList.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+ItemsList.BorderSizePixel = 0
+ItemsList.ScrollBarThickness = 6
+ItemsList.CanvasSize = UDim2.new(0, 0, 0, 0)
 
--- Выбранный фрукт
-local SelectedFruitLabel = Instance.new("TextLabel")
-SelectedFruitLabel.Parent = MainFrame
-SelectedFruitLabel.Size = UDim2.new(1, -20, 0, 30)
-SelectedFruitLabel.Position = UDim2.new(0, 10, 0, 280)
-SelectedFruitLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
-SelectedFruitLabel.Text = "📦 Выбрано: ничего"
-SelectedFruitLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-SelectedFruitLabel.TextSize = 13
-SelectedFruitLabel.Font = Enum.Font.Gotham
+local ItemsCorner = Instance.new("UICorner")
+ItemsCorner.Parent = ItemsList
+ItemsCorner.CornerRadius = UDim.new(0, 10)
+
+local SelectedItemLabel = Instance.new("TextLabel")
+SelectedItemLabel.Parent = ItemSection
+SelectedItemLabel.Size = UDim2.new(1, -20, 0, 25)
+SelectedItemLabel.Position = UDim2.new(0, 10, 0, 185)
+SelectedItemLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+SelectedItemLabel.Text = "📦 Выбрано: ничего"
+SelectedItemLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SelectedItemLabel.TextSize = 13
+SelectedItemLabel.Font = Enum.Font.Gotham
 
 local SelectedCorner = Instance.new("UICorner")
-SelectedCorner.Parent = SelectedFruitLabel
+SelectedCorner.Parent = SelectedItemLabel
 SelectedCorner.CornerRadius = UDim.new(0, 8)
 
--- Кнопки
-local ButtonsFrame = Instance.new("Frame")
-ButtonsFrame.Parent = MainFrame
-ButtonsFrame.Size = UDim2.new(1, -20, 0, 40)
-ButtonsFrame.Position = UDim2.new(0, 10, 0, 320)
-ButtonsFrame.BackgroundTransparency = 1
+-- Секция действий
+local ActionSection = Instance.new("Frame")
+ActionSection.Parent = ContentFrame
+ActionSection.Size = UDim2.new(1, 0, 0, 80)
+ActionSection.Position = UDim2.new(0, 0, 0, 310)
+ActionSection.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+ActionSection.BorderSizePixel = 0
+
+local ActionCorner = Instance.new("UICorner")
+ActionCorner.Parent = ActionSection
+ActionCorner.CornerRadius = UDim.new(0, 15)
 
 local RefreshButton = Instance.new("TextButton")
-RefreshButton.Parent = ButtonsFrame
-RefreshButton.Size = UDim2.new(0, 120, 1, 0)
-RefreshButton.Position = UDim2.new(0, 0, 0, 0)
+RefreshButton.Parent = ActionSection
+RefreshButton.Size = UDim2.new(0, 130, 0, 45)
+RefreshButton.Position = UDim2.new(0, 15, 0, 15)
 RefreshButton.Text = "🔄 ОБНОВИТЬ"
 RefreshButton.BackgroundColor3 = Color3.fromRGB(70, 130, 200)
 RefreshButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -176,12 +264,12 @@ RefreshButton.Font = Enum.Font.GothamBold
 
 local RefreshCorner = Instance.new("UICorner")
 RefreshCorner.Parent = RefreshButton
-RefreshCorner.CornerRadius = UDim.new(0, 8)
+RefreshCorner.CornerRadius = UDim.new(0, 10)
 
 local DupeButton = Instance.new("TextButton")
-DupeButton.Parent = ButtonsFrame
-DupeButton.Size = UDim2.new(0, 120, 1, 0)
-DupeButton.Position = UDim2.new(0.5, -60, 0, 0)
+DupeButton.Parent = ActionSection
+DupeButton.Size = UDim2.new(0, 130, 0, 45)
+DupeButton.Position = UDim2.new(0.5, -65, 0, 15)
 DupeButton.Text = "💰 ДЮП ДЕНЕГ"
 DupeButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
 DupeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -190,224 +278,253 @@ DupeButton.Font = Enum.Font.GothamBold
 
 local DupeCorner = Instance.new("UICorner")
 DupeCorner.Parent = DupeButton
-DupeCorner.CornerRadius = UDim.new(0, 8)
+DupeCorner.CornerRadius = UDim.new(0, 10)
 
 local StatusLabel = Instance.new("TextLabel")
-StatusLabel.Parent = ButtonsFrame
-StatusLabel.Size = UDim2.new(0, 120, 1, 0)
-StatusLabel.Position = UDim2.new(1, -120, 0, 0)
-StatusLabel.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-StatusLabel.Text = "⚡ Готов"
+StatusLabel.Parent = ActionSection
+StatusLabel.Size = UDim2.new(0, 130, 0, 45)
+StatusLabel.Position = UDim2.new(1, -145, 0, 15)
+StatusLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+StatusLabel.Text = "⚡ ГОТОВ"
 StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 StatusLabel.TextSize = 12
-StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.Font = Enum.Font.GothamBold
 
 local StatusCorner = Instance.new("UICorner")
 StatusCorner.Parent = StatusLabel
-StatusCorner.CornerRadius = UDim.new(0, 8)
+StatusCorner.CornerRadius = UDim.new(0, 10)
 
--- Иконка
-local MoneyIcon = Instance.new("TextButton")
-MoneyIcon.Parent = ScreenGui
-MoneyIcon.Size = UDim2.new(0, 70, 0, 70)
-MoneyIcon.Position = UDim2.new(0, 10, 0, 10)
-MoneyIcon.Text = "💰"
-MoneyIcon.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-MoneyIcon.TextColor3 = Color3.fromRGB(0, 0, 0)
-MoneyIcon.TextSize = 30
-MoneyIcon.Font = Enum.Font.GothamBold
-MoneyIcon.Visible = false
+-- Миниатюрная иконка
+local MiniIcon = Instance.new("TextButton")
+MiniIcon.Parent = ScreenGui
+MiniIcon.Size = UDim2.new(0, 0, 0, 0)
+MiniIcon.Position = UDim2.new(0, 10, 0, 10)
+MiniIcon.Text = "💰"
+MiniIcon.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+MiniIcon.TextColor3 = Color3.fromRGB(0, 0, 0)
+MiniIcon.TextSize = 20
+MiniIcon.Font = Enum.Font.GothamBold
+MiniIcon.Visible = false
 
-local MoneyCorner = Instance.new("UICorner")
-MoneyCorner.Parent = MoneyIcon
-MoneyCorner.CornerRadius = UDim.new(1, 0)
+local MiniCorner = Instance.new("UICorner")
+MiniCorner.Parent = MiniIcon
+MiniCorner.CornerRadius = UDim.new(1, 0)
 
 -- Переменные
-local selectedFruit = nil
-local fruitButtons = {}
+local selectedItem = nil
+local itemButtons = {}
 local isMinimized = false
 
--- Получение фруктов из инвентаря
-function getFruits()
-    local fruits = {}
+-- Получение ВСЕХ предметов из инвентаря
+function getAllItems()
+    local items = {}
     local backpack = Player:FindFirstChild("Backpack")
     
     if backpack then
         for _, tool in ipairs(backpack:GetChildren()) do
-            if tool:IsA("Tool") and string.find(tool.Name:lower(), "fruit") then
-                table.insert(fruits, {
+            if tool:IsA("Tool") then
+                local itemType = getItemType(tool)
+                table.insert(items, {
                     Object = tool,
                     Name = tool.Name,
-                    Rarity = getFruitRarity(tool)
+                    Type = itemType,
+                    Icon = getItemIcon(itemType)
                 })
             end
         end
     end
     
-    return fruits
+    return items
 end
 
-function getFruitRarity(tool)
+function getItemType(tool)
     local name = tool.Name:lower()
-    if string.find(name, "legendary") then return "🌟 Легендарный"
-    elseif string.find(name, "epic") then return "💜 Эпический"
-    elseif string.find(name, "rare") then return "💙 Редкий" 
-    else return "💚 Обычный" end
+    if string.find(name, "fruit") then return "Фрукт"
+    elseif string.find(name, "seed") then return "Семя" 
+    elseif string.find(name, "pet") then return "Питомец"
+    elseif string.find(name, "egg") then return "Яйцо"
+    elseif string.find(name, "tool") then return "Инструмент"
+    elseif string.find(name, "weapon") then return "Оружие"
+    else return "Предмет" end
 end
 
--- Обновление списка фруктов
-function updateFruitsList()
-    for _, btn in ipairs(fruitButtons) do
+function getItemIcon(itemType)
+    if itemType == "Фрукт" then return "🍎"
+    elseif itemType == "Семя" then return "🌱"
+    elseif itemType == "Питомец" then return "🐾" 
+    elseif itemType == "Яйцо" then return "🥚"
+    elseif itemType == "Инструмент" then return "🔧"
+    elseif itemType == "Оружие" then return "⚔️"
+    else return "📦" end
+end
+
+-- Обновление списка предметов
+function updateItemsList()
+    for _, btn in ipairs(itemButtons) do
         btn:Destroy()
     end
-    fruitButtons = {}
+    itemButtons = {}
     
-    local fruits = getFruits()
-    FruitsList.CanvasSize = UDim2.new(0, 0, 0, #fruits * 35)
+    local items = getAllItems()
+    ItemsList.CanvasSize = UDim2.new(0, 0, 0, #items * 45)
     
-    for i, fruit in ipairs(fruits) do
-        local fruitButton = Instance.new("TextButton")
-        fruitButton.Parent = FruitsList
-        fruitButton.Size = UDim2.new(1, -20, 0, 30)
-        fruitButton.Position = UDim2.new(0, 10, 0, (i-1) * 35)
-        fruitButton.Text = "  " .. fruit.Rarity .. " | " .. fruit.Name
-        fruitButton.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-        fruitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        fruitButton.TextSize = 11
-        fruitButton.TextXAlignment = Enum.TextXAlignment.Left
-        fruitButton.Font = Enum.Font.Gotham
+    for i, item in ipairs(items) do
+        local itemButton = Instance.new("TextButton")
+        itemButton.Parent = ItemsList
+        itemButton.Size = UDim2.new(1, -20, 0, 40)
+        itemButton.Position = UDim2.new(0, 10, 0, (i-1) * 45)
+        itemButton.Text = "  " .. item.Icon .. " " .. item.Type .. " | " .. item.Name
+        itemButton.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+        itemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        itemButton.TextSize = 12
+        itemButton.TextXAlignment = Enum.TextXAlignment.Left
+        itemButton.Font = Enum.Font.Gotham
         
         local btnCorner = Instance.new("UICorner")
-        btnCorner.Parent = fruitButton
-        btnCorner.CornerRadius = UDim.new(0, 6)
+        btnCorner.Parent = itemButton
+        btnCorner.CornerRadius = UDim.new(0, 8)
         
-        fruitButton.MouseButton1Click:Connect(function()
-            selectedFruit = fruit.Object
-            SelectedFruitLabel.Text = "📦 Выбрано: " .. fruit.Name
-            StatusLabel.Text = "✅ Готов"
+        -- Анимации кнопки
+        itemButton.MouseEnter:Connect(function()
+            TweenService:Create(itemButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(65, 65, 75),
+                Size = UDim2.new(1, -15, 0, 42)
+            }):Play()
         end)
         
-        table.insert(fruitButtons, fruitButton)
+        itemButton.MouseLeave:Connect(function()
+            TweenService:Create(itemButton, TweenInfo.new(0.2), {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 60),
+                Size = UDim2.new(1, -20, 0, 40)
+            }):Play()
+        end)
+        
+        itemButton.MouseButton1Click:Connect(function()
+            selectedItem = item.Object
+            SelectedItemLabel.Text = "📦 Выбрано: " .. item.Name
+            StatusLabel.Text = "✅ ГОТОВ"
+            
+            -- Анимация выбора
+            TweenService:Create(itemButton, TweenInfo.new(0.3), {
+                BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+            }):Play()
+        end)
+        
+        table.insert(itemButtons, itemButton)
     end
 end
 
--- МЕТОДЫ ДЮПА ДЕНЕГ
+-- Дюп денег
 function dupeMoney()
     local amountText = AmountBox.Text
-    if not selectedFruit or amountText == "" then
-        StatusLabel.Text = "❌ Выберите фрукт и введите сумму"
+    if not selectedItem or amountText == "" then
+        StatusLabel.Text = "❌ ВЫБЕРИТЕ ПРЕДМЕТ И СУММУ"
         return
     end
     
     local amount = tonumber(amountText)
     if not amount or amount <= 0 then
-        StatusLabel.Text = "❌ Введите корректную сумму"
+        StatusLabel.Text = "❌ НЕКОРРЕКТНАЯ СУММА"
         return
     end
     
-    StatusLabel.Text = "🎯 Начинаю дюп денег..."
+    StatusLabel.Text = "🎯 НАЧИНАЮ ДЮП..."
+    
+    -- Анимация кнопки
+    TweenService:Create(DupeButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 125, 0, 42)}):Play()
+    wait(0.1)
+    TweenService:Create(DupeButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 130, 0, 45)}):Play()
     
     pcall(function()
-        local fruitName = selectedFruit.Name
+        local itemName = selectedItem.Name
         
-        -- Метод 1: RemoteEvent продажи
-        StatusLabel.Text = "💰 Метод 1: Продажа через RemoteEvents..."
-        
-        local sellRemotes = {
-            "SellFruit", "SellItem", "Sell", "SellTool",
-            "SellFruitRemote", "SellItemRemote", "SellRemote"
-        }
-        
-        for _, remoteName in ipairs(sellRemotes) do
-            local remote = game:GetService("ReplicatedStorage"):FindFirstChild(remoteName)
-            if remote and remote:IsA("RemoteEvent") then
-                for i = 1, 5 do
-                    pcall(function() remote:FireServer(selectedFruit) end)
-                    pcall(function() remote:FireServer(fruitName) end)
-                    pcall(function() remote:FireServer(selectedFruit, amount) end)
-                    pcall(function() remote:FireServer(fruitName, amount) end)
-                    wait(0.1)
-                end
-                StatusLabel.Text = "✅ Использован: " .. remoteName
-            end
-        end
-        
-        -- Метод 2: RemoteEvent добавления денег
-        StatusLabel.Text = "💰 Метод 2: Прямое добавление денег..."
-        
-        local moneyRemotes = {
-            "AddMoney", "GiveMoney", "AddCash", "GiveCash",
-            "AddCoins", "GiveCoins", "AddCurrency", "GiveCurrency"
-        }
-        
-        for _, remoteName in ipairs(moneyRemotes) do
-            local remote = game:GetService("ReplicatedStorage"):FindFirstChild(remoteName)
-            if remote and remote:IsA("RemoteEvent") then
-                for i = 1, 10 do
-                    pcall(function() remote:FireServer(amount) end)
-                    pcall(function() remote:FireServer(Player, amount) end)
-                    pcall(function() remote:FireServer(amount, "FruitSale") end)
-                    wait(0.1)
-                end
-                StatusLabel.Text = "✅ Использован: " .. remoteName
-            end
-        end
-        
-        -- Метод 3: ClickDetector'ы продажи
-        StatusLabel.Text = "💰 Метод 3: Поиск NPC продавцов..."
-        
-        local npcs = workspace:GetDescendants()
-        for _, npc in ipairs(npcs) do
-            if npc:IsA("Model") and (npc.Name:find("Seller") or npc.Name:find("Merchant") or npc.Name:find("Vendor")) then
-                for _, part in ipairs(npc:GetDescendants()) do
-                    if part:IsA("Part") or part:IsA("MeshPart") then
-                        local clickDetector = part:FindFirstChildOfClass("ClickDetector")
-                        if clickDetector then
-                            for i = 1, 3 do
-                                fireclickdetector(clickDetector)
-                                wait(0.3)
-                            end
-                            StatusLabel.Text = "✅ Взаимодействие с: " .. npc.Name
+        -- Все методы дюпа денег
+        local methods = {
+            {"💰 Продажа через RemoteEvents", function()
+                local remotes = {"SellFruit", "SellItem", "Sell", "AddMoney", "GiveMoney"}
+                for _, remoteName in ipairs(remotes) do
+                    local remote = game:GetService("ReplicatedStorage"):FindFirstChild(remoteName)
+                    if remote then
+                        for i = 1, 5 do
+                            pcall(function() remote:FireServer(selectedItem, amount) end)
+                            pcall(function() remote:FireServer(itemName, amount) end)
+                            wait(0.1)
                         end
                     end
                 end
-            end
-        end
-        
-        -- Метод 4: Создание фейковой продажи
-        StatusLabel.Text = "💰 Метод 4: Создание фейковой сделки..."
-        
-        local allRemotes = game:GetService("ReplicatedStorage"):GetDescendants()
-        for _, remote in ipairs(allRemotes) do
-            if remote:IsA("RemoteEvent") then
-                local name = remote.Name:lower()
-                if name:find("fruit") or name:find("sell") or name:find("money") or name:find("cash") then
-                    for i = 1, 3 do
-                        pcall(function() remote:FireServer(selectedFruit, amount) end)
-                        pcall(function() remote:FireServer(fruitName, amount) end)
-                        pcall(function() remote:FireServer(Player, selectedFruit, amount) end)
-                        wait(0.1)
+            end},
+            
+            {"🏪 Взаимодействие с NPC", function()
+                for _, obj in ipairs(workspace:GetDescendants()) do
+                    if obj:IsA("Model") and (obj.Name:find("Seller") or obj.Name:find("Merchant")) then
+                        for _, part in ipairs(obj:GetDescendants()) do
+                            local clickDetector = part:FindFirstChildOfClass("ClickDetector")
+                            if clickDetector then
+                                for i = 1, 3 do
+                                    fireclickdetector(clickDetector)
+                                    wait(0.3)
+                                end
+                            end
+                        end
                     end
                 end
-            end
+            end},
+            
+            {"⚡ Все возможные RemoteEvents", function()
+                local allRemotes = game:GetService("ReplicatedStorage"):GetDescendants()
+                for _, remote in ipairs(allRemotes) do
+                    if remote:IsA("RemoteEvent") then
+                        for i = 1, 2 do
+                            pcall(function() remote:FireServer(selectedItem, amount) end)
+                            pcall(function() remote:FireServer(amount) end)
+                            wait(0.05)
+                        end
+                    end
+                end
+            end}
+        }
+        
+        for i, method in ipairs(methods) do
+            StatusLabel.Text = method[1] .. " (" .. i .. "/" .. #methods .. ")"
+            pcall(method[2])
+            wait(1)
         end
         
-        StatusLabel.Text = "🎉 Дюп денег завершен! Проверяйте баланс"
+        StatusLabel.Text = "🎉 ДЮП ЗАВЕРШЕН!"
+        
+        -- Обновляем список через 2 секунды
+        wait(2)
+        updateItemsList()
+        StatusLabel.Text = "⚡ ГОТОВ"
         
     end)
 end
 
--- Сворачивание
+-- Сворачивание с анимацией
 function toggleMinimize()
     if isMinimized then
+        -- Разворачиваем
+        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 450, 0, 500),
+            Position = UDim2.new(0.5, -225, 0.5, -250)
+        }):Play()
         MainFrame.Visible = true
-        MoneyIcon.Visible = false
+        MiniIcon.Visible = false
         MinimizeButton.Text = "─"
         isMinimized = false
     else
+        -- Сворачиваем
+        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+            Size = UDim2.new(0, 0, 0, 0),
+            Position = UDim2.new(0.5, 0, 0.5, 0)
+        }):Play()
+        wait(0.5)
         MainFrame.Visible = false
-        MoneyIcon.Visible = true
-        MoneyIcon.Position = MainFrame.Position
+        MiniIcon.Visible = true
+        MiniIcon.Position = MainFrame.Position
+        TweenService:Create(MiniIcon, TweenInfo.new(0.3), {
+            Size = UDim2.new(0, 60, 0, 60)
+        }):Play()
         MinimizeButton.Text = "＋"
         isMinimized = true
     end
@@ -440,10 +557,14 @@ local function makeDraggable(gui)
     end)
 end
 
--- Обработчики кнопок
+-- Обработчики кнопок с анимациями
 RefreshButton.MouseButton1Click:Connect(function()
-    updateFruitsList()
-    StatusLabel.Text = "✅ Фрукты обновлены"
+    TweenService:Create(RefreshButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 125, 0, 42)}):Play()
+    wait(0.1)
+    TweenService:Create(RefreshButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 130, 0, 45)}):Play()
+    
+    updateItemsList()
+    StatusLabel.Text = "✅ ОБНОВЛЕНО"
 end)
 
 DupeButton.MouseButton1Click:Connect(function()
@@ -454,12 +575,22 @@ MinimizeButton.MouseButton1Click:Connect(function()
     toggleMinimize()
 end)
 
-MoneyIcon.MouseButton1Click:Connect(function()
+CloseButton.MouseButton1Click:Connect(function()
+    TweenService:Create(MainFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 0)}):Play()
+    wait(0.5)
+    ScreenGui:Destroy()
+end)
+
+MiniIcon.MouseButton1Click:Connect(function()
     toggleMinimize()
 end)
 
--- Авто-обновление
-updateFruitsList()
+-- Делаем перетаскиваемым
+makeDraggable(TopBar)
+makeDraggable(MiniIcon)
+
+-- Авто-обновление при запуске
+updateItemsList()
 
 -- Анти-афк
 local VirtualUser = game:GetService("VirtualUser")
@@ -468,6 +599,6 @@ Player.Idled:Connect(function()
     VirtualUser:ClickButton2(Vector2.new())
 end)
 
-print("💰 FROGGI MONEY DUPE by BloodEyEs-Hacker загружен!")
-print("🎯 4 метода дюпа денег через продажу фруктов")
-print("💵 Введите сумму и выберите фрукт для дюпа")
+print("💰 FROGGI MONEY ULTRA by BloodEyEs-Hacker загружен!")
+print("🎯 Премиум дизайн с анимациями")
+print("📱 Полная поддержка мобильных устройств")
