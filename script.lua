@@ -1,365 +1,212 @@
--- FroggiDupe Mobile - Premium Dupe Script for Grow A Garden
--- Created for DeltaX Mobile
-
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
-
+-- FroggiDupe - Простой рабочий дюп для Grow A Garden
 local Player = game:GetService("Players").LocalPlayer
-local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 
--- Система ключей
-local correctKey = "NewFroggi"
-local authenticated = false
+-- Простой интерфейс
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local DupeButton = Instance.new("TextButton")
+local Status = Instance.new("TextLabel")
+local ToggleButton = Instance.new("TextButton")
 
--- Красивый интерфейс ввода ключа
-local function createKeyUI()
-    local ScreenGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local UICorner = Instance.new("UICorner")
-    local Title = Instance.new("TextLabel")
-    local InputFrame = Instance.new("Frame")
-    local InputBox = Instance.new("TextBox")
-    local SubmitButton = Instance.new("TextButton")
-    local Message = Instance.new("TextLabel")
-    local FroggiIcon = Instance.new("TextLabel")
-    
-    ScreenGui.Parent = game:GetService("CoreGui")
-    ScreenGui.Name = "FroggiDupeKey"
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    
-    MainFrame.Parent = ScreenGui
-    MainFrame.Size = UDim2.new(0, 350, 0, 280)
-    MainFrame.Position = UDim2.new(0.5, -175, 0.5, -140)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-    MainFrame.BorderSizePixel = 0
-    
-    UICorner.Parent = MainFrame
-    UICorner.CornerRadius = UDim.new(0, 15)
-    
-    -- Градиентная рамка
-    local GradientBorder = Instance.new("Frame")
-    GradientBorder.Parent = MainFrame
-    GradientBorder.Size = UDim2.new(1, 4, 1, 4)
-    GradientBorder.Position = UDim2.new(0, -2, 0, -2)
-    GradientBorder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    GradientBorder.ZIndex = 0
-    
-    local Gradient = Instance.new("UIGradient")
-    Gradient.Parent = GradientBorder
-    Gradient.Rotation = 45
-    Gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 255, 136)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 204, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(153, 0, 255))
-    })
-    
-    local BorderCorner = Instance.new("UICorner")
-    BorderCorner.Parent = GradientBorder
-    BorderCorner.CornerRadius = UDim.new(0, 17)
-    
-    FroggiIcon.Parent = MainFrame
-    FroggiIcon.Size = UDim2.new(0, 80, 0, 80)
-    FroggiIcon.Position = UDim2.new(0.5, -40, 0.1, 0)
-    FroggiIcon.BackgroundTransparency = 1
-    FroggiIcon.Text = "🐸"
-    FroggiIcon.TextColor3 = Color3.fromRGB(0, 255, 136)
-    FroggiIcon.TextSize = 50
-    FroggiIcon.Font = Enum.Font.GothamBold
-    FroggiIcon.TextStrokeTransparency = 0.8
-    
-    Title.Parent = MainFrame
-    Title.Size = UDim2.new(0, 300, 0, 40)
-    Title.Position = UDim2.new(0.5, -150, 0.4, 0)
-    Title.BackgroundTransparency = 1
-    Title.Text = "FroggiDupe Mobile"
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.TextSize = 20
-    Title.Font = Enum.Font.GothamBold
-    Title.TextStrokeTransparency = 0.7
-    
-    InputFrame.Parent = MainFrame
-    InputFrame.Size = UDim2.new(0, 250, 0, 45)
-    InputFrame.Position = UDim2.new(0.5, -125, 0.6, 0)
-    InputFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
-    InputFrame.BorderSizePixel = 0
-    
-    local InputCorner = Instance.new("UICorner")
-    InputCorner.Parent = InputFrame
-    InputCorner.CornerRadius = UDim.new(0, 10)
-    
-    InputBox.Parent = InputFrame
-    InputBox.Size = UDim2.new(0, 230, 0, 35)
-    InputBox.Position = UDim2.new(0.5, -115, 0.5, -17)
-    InputBox.PlaceholderText = "Введите ключ доступа..."
-    InputBox.Text = ""
-    InputBox.BackgroundTransparency = 1
-    InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    InputBox.TextSize = 16
-    InputBox.Font = Enum.Font.Gotham
-    InputBox.ClearTextOnFocus = false
-    
-    SubmitButton.Parent = MainFrame
-    SubmitButton.Size = UDim2.new(0, 140, 0, 40)
-    SubmitButton.Position = UDim2.new(0.5, -70, 0.8, 0)
-    SubmitButton.Text = "АКТИВИРОВАТЬ"
-    SubmitButton.BackgroundColor3 = Color3.fromRGB(0, 255, 136)
-    SubmitButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-    SubmitButton.TextSize = 16
-    SubmitButton.Font = Enum.Font.GothamBold
-    SubmitButton.AutoButtonColor = false
-    
-    local ButtonCorner = Instance.new("UICorner")
-    ButtonCorner.Parent = SubmitButton
-    ButtonCorner.CornerRadius = UDim.new(0, 10)
-    
-    Message.Parent = MainFrame
-    Message.Size = UDim2.new(0, 300, 0, 25)
-    Message.Position = UDim2.new(0.5, -150, 0.95, -12)
-    Message.BackgroundTransparency = 1
-    Message.Text = "Введите ключ: NewFroggi"
-    Message.TextColor3 = Color3.fromRGB(150, 150, 150)
-    Message.TextSize = 12
-    Message.Font = Enum.Font.Gotham
-    
-    -- Анимации кнопки
-    SubmitButton.MouseEnter:Connect(function()
-        TweenService:Create(SubmitButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 230, 120)}):Play()
-    end)
-    
-    SubmitButton.MouseLeave:Connect(function()
-        TweenService:Create(SubmitButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 255, 136)}):Play()
-    end)
-    
-    SubmitButton.MouseButton1Click:Connect(function()
-        if InputBox.Text == correctKey then
-            authenticated = true
-            Message.Text = "✅ Успешная активация!"
-            Message.TextColor3 = Color3.fromRGB(0, 255, 136)
-            
-            wait(1)
-            ScreenGui:Destroy()
-            loadMainScript()
-        else
-            Message.Text = "❌ Неверный ключ!"
-            Message.TextColor3 = Color3.fromRGB(255, 50, 50)
-        end
-    end)
-    
-    InputBox.Focused:Connect(function()
-        TweenService:Create(InputFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(45, 45, 60)}):Play()
-    end)
-    
-    InputBox.FocusLost:Connect(function()
-        TweenService:Create(InputFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 45)}):Play()
-    end)
-end
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.Name = "FroggiDupeSimple"
 
--- Основной скрипт после активации
-function loadMainScript()
-    -- Настройки для Grow A Garden
-    local Settings = {
-        AutoDupeFruits = true,
-        AutoDupePets = true,
-        AutoBuySeeds = true,
-        AutoBuyEggs = true,
-        AutoPlant = true,
-        AutoWater = true,
-        AutoCollect = true,
-        DupeDelay = 1
-    }
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 250, 0, 180)
+Frame.Position = UDim2.new(0, 10, 0, 10)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+Frame.BorderSizePixel = 0
 
-    -- Загрузка библиотеки UI
-    local success, Library = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-    end)
-    
-    if not success then
-        warn("Не удалось загрузить библиотеку UI")
-        return
-    end
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = Frame
+UICorner.CornerRadius = UDim.new(0, 8)
 
-    local Window = Library.CreateLib("🐸 FroggiDupe v2.0", "DarkTheme")
+Title.Parent = Frame
+Title.Size = UDim2.new(0, 230, 0, 40)
+Title.Position = UDim2.new(0, 10, 0, 10)
+Title.BackgroundTransparency = 1
+Title.Text = "🐸 FroggiDupe"
+Title.TextColor3 = Color3.fromRGB(0, 255, 136)
+Title.TextSize = 20
+Title.Font = Enum.Font.GothamBold
+
+DupeButton.Parent = Frame
+DupeButton.Size = UDim2.new(0, 200, 0, 35)
+DupeButton.Position = UDim2.new(0, 25, 0, 60)
+DupeButton.Text = "🔄 Запустить Дюп"
+DupeButton.BackgroundColor3 = Color3.fromRGB(0, 255, 136)
+DupeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+DupeButton.TextSize = 16
+DupeButton.Font = Enum.Font.GothamBold
+
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.Parent = DupeButton
+ButtonCorner.CornerRadius = UDim.new(0, 6)
+
+ToggleButton.Parent = Frame
+ToggleButton.Size = UDim2.new(0, 200, 0, 35)
+ToggleButton.Position = UDim2.new(0, 25, 0, 105)
+ToggleButton.Text = "⏸️ Остановить"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 16
+ToggleButton.Font = Enum.Font.GothamBold
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.Parent = ToggleButton
+ToggleCorner.CornerRadius = UDim.new(0, 6)
+
+Status.Parent = Frame
+Status.Size = UDim2.new(0, 230, 0, 20)
+Status.Position = UDim2.new(0, 10, 0, 150)
+Status.BackgroundTransparency = 1
+Status.Text = "Статус: Ожидание..."
+Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+Status.TextSize = 14
+Status.Font = Enum.Font.Gotham
+
+-- Переменные
+local isDuping = false
+local dupeConnection = nil
+
+-- Функция дюпа
+function startDupe()
+    if isDuping then return end
     
-    -- Главная вкладка
-    local MainTab = Window:NewTab("Главная")
-    local AutoSection = MainTab:NewSection("⚡ Авто-Фарм")
+    isDuping = true
+    Status.Text = "Статус: Дюп активен ✅"
+    DupeButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
     
-    AutoSection:NewToggle("Авто Дюп Фруктов", "Дублирует фрукты в инвентаре", function(state)
-        Settings.AutoDupeFruits = state
-    end)
-    
-    AutoSection:NewToggle("Авто Дюп Питомцев", "Дублирует питомцев в инвентаре", function(state)
-        Settings.AutoDupePets = state
-    end)
-    
-    AutoSection:NewToggle("Авто Посадка", "Автоматически сажает семена", function(state)
-        Settings.AutoPlant = state
-    end)
-    
-    AutoSection:NewToggle("Авто Полив", "Автоматически поливает растения", function(state)
-        Settings.AutoWater = state
-    end)
-    
-    AutoSection:NewToggle("Авто Сбор", "Автоматически собирает урожай", function(state)
-        Settings.AutoCollect = state
-    end)
-    
-    -- Покупка вкладка
-    local BuyTab = Window:NewTab("🛒 Покупка")
-    local BuySection = BuyTab:NewSection("Авто-Покупка")
-    
-    BuySection:NewToggle("Авто Покупка Семян", "Покупает семена автоматически", function(state)
-        Settings.AutoBuySeeds = state
-    end)
-    
-    BuySection:NewToggle("Авто Покупка Яиц", "Покупает яйца автоматически", function(state)
-        Settings.AutoBuyEggs = state
-    end)
-    
-    -- Настройки вкладка
-    local SettingsTab = Window:NewTab("⚙️ Настройки")
-    local ConfigSection = SettingsTab:NewSection("Конфигурация")
-    
-    ConfigSection:NewSlider("Задержка", "Задержка между операциями", 5, 0.5, function(value)
-        Settings.DupeDelay = value
-    end)
-    
-    -- Функции для Grow A Garden
-    function dupeItems()
-        if Settings.AutoDupeFruits then
+    dupeConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if not isDuping then return end
+        
+        pcall(function()
             local backpack = Player:FindFirstChild("Backpack")
             if backpack then
+                -- Дюп фруктов
                 for _, tool in ipairs(backpack:GetChildren()) do
                     if tool:IsA("Tool") and string.find(tool.Name:lower(), "fruit") then
-                        pcall(function()
-                            tool.Parent = Player.Character
-                            wait(0.3)
-                            tool.Parent = backpack
-                        end)
-                        wait(Settings.DupeDelay)
+                        tool.Parent = Player.Character
+                        wait(0.1)
+                        tool.Parent = backpack
+                        wait(0.1)
                     end
                 end
-            end
-        end
-        
-        if Settings.AutoDupePets then
-            local backpack = Player:FindFirstChild("Backpack")
-            if backpack then
+                
+                -- Дюп питомцев
                 for _, tool in ipairs(backpack:GetChildren()) do
                     if tool:IsA("Tool") and string.find(tool.Name:lower(), "pet") then
-                        pcall(function()
-                            tool.Parent = Player.Character
-                            wait(0.3)
-                            tool.Parent = backpack
-                        end)
-                        wait(Settings.DupeDelay)
+                        tool.Parent = Player.Character
+                        wait(0.1)
+                        tool.Parent = backpack
+                        wait(0.1)
+                    end
+                end
+                
+                -- Дюп семян
+                for _, tool in ipairs(backpack:GetChildren()) do
+                    if tool:IsA("Tool") and string.find(tool.Name:lower(), "seed") then
+                        tool.Parent = Player.Character
+                        wait(0.1)
+                        tool.Parent = backpack
+                        wait(0.1)
                     end
                 end
             end
-        end
-    end
-    
-    function autoBuyItems()
-        if Settings.AutoBuySeeds then
-            pcall(function()
-                local seedShop = workspace:FindFirstChild("SeedShop") 
-                or workspace:FindFirstChild("Seed Store") 
-                or workspace:FindFirstChild("SeedVendor")
-                
-                if seedShop then
-                    local clickDetector = seedShop:FindFirstChildOfClass("ClickDetector")
-                    if clickDetector then
-                        fireclickdetector(clickDetector)
-                        wait(1)
-                    end
-                end
-            end)
-        end
-        
-        if Settings.AutoBuyEggs then
-            pcall(function()
-                local eggShop = workspace:FindFirstChild("EggShop") 
-                or workspace:FindFirstChild("PetShop") 
-                or workspace:FindFirstChild("Pet Store")
-                
-                if eggShop then
-                    local clickDetector = eggShop:FindFirstChildOfClass("ClickDetector")
-                    if clickDetector then
-                        fireclickdetector(clickDetector)
-                        wait(1)
-                    end
-                end
-            end)
-        end
-    end
-    
-    function autoFarm()
-        if Settings.AutoPlant then
-            pcall(function()
-                local seeds = Player.Backpack:GetChildren()
-                for _, seed in ipairs(seeds) do
-                    if seed:IsA("Tool") and string.find(seed.Name:lower(), "seed") then
-                        -- Логика посадки семян
-                    end
-                end
-            end)
-        end
-        
-        if Settings.AutoWater then
-            pcall(function()
-                -- Логика полива растений
-                local waterCan = Player.Backpack:FindFirstChild("Watering Can") 
-                or Player.Backpack:FindFirstChild("WaterCan")
-                
-                if waterCan then
-                    waterCan.Parent = Player.Character
-                    wait(0.5)
-                    -- Активация полива
-                    waterCan.Parent = Player.Backpack
-                end
-            end)
-        end
-        
-        if Settings.AutoCollect then
-            pcall(function()
-                -- Логика сбора урожая
-                local plants = workspace:GetDescendants()
-                for _, plant in ipairs(plants) do
-                    if plant.Name:lower():find("plant") and plant:FindFirstChild("ClickDetector") then
-                        fireclickdetector(plant.ClickDetector)
-                        wait(0.2)
-                    end
-                end
-            end)
-        end
-    end
-    
-    -- Основной цикл
-    local connection
-    connection = RunService.Heartbeat:Connect(function()
-        if authenticated then
-            pcall(function()
-                dupeItems()
-                autoBuyItems()
-                autoFarm()
-            end)
-        end
+        end)
     end)
-    
-    -- Уведомление об успехе
-    Library:Notify("FroggiDupe Активирован!", "🐸 Скрипт успешно запущен для Grow A Garden", 5)
-    
-    -- Анти-афк
-    local VirtualUser = game:GetService("VirtualUser")
-    Player.Idled:Connect(function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end)
-    
-    print("🐸 FroggiDupe v2.0 loaded for Grow A Garden!")
 end
 
--- Запуск интерфейса ключа
-createKeyUI()
+-- Функция остановки
+function stopDupe()
+    isDuping = false
+    if dupeConnection then
+        dupeConnection:Disconnect()
+        dupeConnection = nil
+    end
+    Status.Text = "Статус: Остановлен ❌"
+    DupeButton.BackgroundColor3 = Color3.fromRGB(0, 255, 136)
+end
+
+-- Обработчики кнопок
+DupeButton.MouseButton1Click:Connect(function()
+    startDupe()
+end)
+
+ToggleButton.MouseButton1Click:Connect(function()
+    stopDupe()
+end)
+
+-- Авто-покупка (простая версия)
+local function autoBuy()
+    pcall(function()
+        -- Магазин семян
+        local seedShop = workspace:FindFirstChild("SeedShop") 
+        if seedShop then
+            local clickDetector = seedShop:FindFirstChildOfClass("ClickDetector")
+            if clickDetector then
+                fireclickdetector(clickDetector)
+            end
+        end
+        
+        -- Магазин яиц
+        local eggShop = workspace:FindFirstChild("EggShop") or workspace:FindFirstChild("PetShop")
+        if eggShop then
+            local clickDetector = eggShop:FindFirstChildOfClass("ClickDetector")
+            if clickDetector then
+                fireclickdetector(clickDetector)
+            end
+        end
+    end)
+end
+
+-- Кнопка авто-покупки
+local BuyButton = Instance.new("TextButton")
+BuyButton.Parent = Frame
+BuyButton.Size = UDim2.new(0, 90, 0, 25)
+BuyButton.Position = UDim2.new(0, 25, 0, 145)
+BuyButton.Text = "🛒 Купить"
+BuyButton.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+BuyButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+BuyButton.TextSize = 12
+BuyButton.Font = Enum.Font.GothamBold
+
+local BuyCorner = Instance.new("UICorner")
+BuyCorner.Parent = BuyButton
+BuyCorner.CornerRadius = UDim.new(0, 4)
+
+BuyButton.MouseButton1Click:Connect(autoBuy)
+
+-- Перемещение интерфейса
+local dragging = false
+local dragInput, dragStart, startPos
+
+Frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = Frame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+Frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+print("🐸 FroggiDupe загружен! Просто нажми 'Запустить Дюп'")
