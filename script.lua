@@ -1,5 +1,6 @@
--- FroggiDupe - Простой рабочий дюп для Grow A Garden
+-- FroggiDupe by BloodEyEs-Hacker - Настоящий дюп для Grow A Garden
 local Player = game:GetService("Players").LocalPlayer
+local RunService = game:GetService("RunService")
 
 -- Простой интерфейс
 local ScreenGui = Instance.new("ScreenGui")
@@ -10,10 +11,10 @@ local Status = Instance.new("TextLabel")
 local ToggleButton = Instance.new("TextButton")
 
 ScreenGui.Parent = game:GetService("CoreGui")
-ScreenGui.Name = "FroggiDupeSimple"
+ScreenGui.Name = "FroggiDupeReal"
 
 Frame.Parent = ScreenGui
-Frame.Size = UDim2.new(0, 250, 0, 180)
+Frame.Size = UDim2.new(0, 280, 0, 200)
 Frame.Position = UDim2.new(0, 10, 0, 10)
 Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
 Frame.BorderSizePixel = 0
@@ -23,18 +24,18 @@ UICorner.Parent = Frame
 UICorner.CornerRadius = UDim.new(0, 8)
 
 Title.Parent = Frame
-Title.Size = UDim2.new(0, 230, 0, 40)
+Title.Size = UDim2.new(0, 260, 0, 40)
 Title.Position = UDim2.new(0, 10, 0, 10)
 Title.BackgroundTransparency = 1
-Title.Text = "🐸 FroggiDupe"
+Title.Text = "🐸 FroggiDupe REAL"
 Title.TextColor3 = Color3.fromRGB(0, 255, 136)
 Title.TextSize = 20
 Title.Font = Enum.Font.GothamBold
 
 DupeButton.Parent = Frame
-DupeButton.Size = UDim2.new(0, 200, 0, 35)
-DupeButton.Position = UDim2.new(0, 25, 0, 60)
-DupeButton.Text = "🔄 Запустить Дюп"
+DupeButton.Size = UDim2.new(0, 240, 0, 35)
+DupeButton.Position = UDim2.new(0, 20, 0, 60)
+DupeButton.Text = "🔄 НАЧАТЬ ДЮП"
 DupeButton.BackgroundColor3 = Color3.fromRGB(0, 255, 136)
 DupeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 DupeButton.TextSize = 16
@@ -45,9 +46,9 @@ ButtonCorner.Parent = DupeButton
 ButtonCorner.CornerRadius = UDim.new(0, 6)
 
 ToggleButton.Parent = Frame
-ToggleButton.Size = UDim2.new(0, 200, 0, 35)
-ToggleButton.Position = UDim2.new(0, 25, 0, 105)
-ToggleButton.Text = "⏸️ Остановить"
+ToggleButton.Size = UDim2.new(0, 240, 0, 35)
+ToggleButton.Position = UDim2.new(0, 20, 0, 105)
+ToggleButton.Text = "⏸️ ОСТАНОВИТЬ ДЮП"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.TextSize = 16
@@ -58,7 +59,7 @@ ToggleCorner.Parent = ToggleButton
 ToggleCorner.CornerRadius = UDim.new(0, 6)
 
 Status.Parent = Frame
-Status.Size = UDim2.new(0, 230, 0, 20)
+Status.Size = UDim2.new(0, 260, 0, 20)
 Status.Position = UDim2.new(0, 10, 0, 150)
 Status.BackgroundTransparency = 1
 Status.Text = "Статус: Ожидание..."
@@ -70,51 +71,81 @@ Status.Font = Enum.Font.Gotham
 local isDuping = false
 local dupeConnection = nil
 
--- Функция дюпа
+-- Функция настоящего дюпа через клонирование
+function realDupe()
+    pcall(function()
+        local backpack = Player:FindFirstChild("Backpack")
+        if not backpack then return end
+        
+        -- Ищем фрукты для дублирования
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:IsA("Tool") and (string.find(tool.Name:lower(), "fruit") or string.find(tool.Name:lower(), "seed")) then
+                
+                -- Создаем клон фрукта/семени
+                local clone = tool:Clone()
+                clone.Parent = backpack
+                
+                -- Сохраняем все свойства оригинала
+                clone.Name = tool.Name
+                clone.TextureId = tool.TextureId
+                clone.MeshId = tool.MeshId
+                
+                -- Копируем все дополнительные свойства
+                for _, prop in ipairs({"Weight", "Value", "Rarity", "Level"}) do
+                    if tool:FindFirstChild(prop) then
+                        local originalValue = tool[prop]
+                        if originalValue then
+                            clone[prop] = originalValue
+                        end
+                    end
+                end
+                
+                Status.Text = "Дюп: " .. tool.Name .. " ✅"
+                wait(0.5) -- Задержка между дублированием
+            end
+        end
+        
+        -- Дюп питомцев
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:IsA("Tool") and string.find(tool.Name:lower(), "pet") then
+                
+                -- Создаем клон питомца
+                local clone = tool:Clone()
+                clone.Parent = backpack
+                
+                -- Сохраняем все свойства
+                clone.Name = tool.Name
+                clone.TextureId = tool.TextureId
+                clone.MeshId = tool.MeshId
+                
+                -- Копируем специальные свойства питомцев
+                for _, prop in ipairs({"Level", "Rarity", "XP", "Evolution"}) do
+                    if tool:FindFirstChild(prop) then
+                        local originalValue = tool[prop]
+                        if originalValue then
+                            clone[prop] = originalValue
+                        end
+                    end
+                end
+                
+                Status.Text = "Дюп: " .. tool.Name .. " ✅"
+                wait(0.5) -- Задержка между дублированием
+            end
+        end
+    end)
+end
+
+-- Функция запуска дюпа
 function startDupe()
     if isDuping then return end
     
     isDuping = true
-    Status.Text = "Статус: Дюп активен ✅"
+    Status.Text = "Статус: Дюп активен 🟢"
     DupeButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
     
-    dupeConnection = game:GetService("RunService").Heartbeat:Connect(function()
+    dupeConnection = RunService.Heartbeat:Connect(function()
         if not isDuping then return end
-        
-        pcall(function()
-            local backpack = Player:FindFirstChild("Backpack")
-            if backpack then
-                -- Дюп фруктов
-                for _, tool in ipairs(backpack:GetChildren()) do
-                    if tool:IsA("Tool") and string.find(tool.Name:lower(), "fruit") then
-                        tool.Parent = Player.Character
-                        wait(0.1)
-                        tool.Parent = backpack
-                        wait(0.1)
-                    end
-                end
-                
-                -- Дюп питомцев
-                for _, tool in ipairs(backpack:GetChildren()) do
-                    if tool:IsA("Tool") and string.find(tool.Name:lower(), "pet") then
-                        tool.Parent = Player.Character
-                        wait(0.1)
-                        tool.Parent = backpack
-                        wait(0.1)
-                    end
-                end
-                
-                -- Дюп семян
-                for _, tool in ipairs(backpack:GetChildren()) do
-                    if tool:IsA("Tool") and string.find(tool.Name:lower(), "seed") then
-                        tool.Parent = Player.Character
-                        wait(0.1)
-                        tool.Parent = backpack
-                        wait(0.1)
-                    end
-                end
-            end
-        end)
+        realDupe()
     end)
 end
 
@@ -125,7 +156,7 @@ function stopDupe()
         dupeConnection:Disconnect()
         dupeConnection = nil
     end
-    Status.Text = "Статус: Остановлен ❌"
+    Status.Text = "Статус: Остановлен 🔴"
     DupeButton.BackgroundColor3 = Color3.fromRGB(0, 255, 136)
 end
 
@@ -138,35 +169,57 @@ ToggleButton.MouseButton1Click:Connect(function()
     stopDupe()
 end)
 
--- Авто-покупка (простая версия)
-local function autoBuy()
+-- Функция покупки семян/яиц
+local function buyItems()
     pcall(function()
         -- Магазин семян
-        local seedShop = workspace:FindFirstChild("SeedShop") 
-        if seedShop then
-            local clickDetector = seedShop:FindFirstChildOfClass("ClickDetector")
-            if clickDetector then
-                fireclickdetector(clickDetector)
+        local seedShops = {
+            workspace:FindFirstChild("SeedShop"),
+            workspace:FindFirstChild("Seed Store"),
+            workspace:FindFirstChild("SeedVendor"),
+            workspace:FindFirstChild("Seeds")
+        }
+        
+        for _, shop in ipairs(seedShops) do
+            if shop then
+                local clickDetector = shop:FindFirstChildOfClass("ClickDetector")
+                if clickDetector then
+                    fireclickdetector(clickDetector)
+                    Status.Text = "Покупка семян..."
+                    wait(1)
+                end
             end
         end
         
         -- Магазин яиц
-        local eggShop = workspace:FindFirstChild("EggShop") or workspace:FindFirstChild("PetShop")
-        if eggShop then
-            local clickDetector = eggShop:FindFirstChildOfClass("ClickDetector")
-            if clickDetector then
-                fireclickdetector(clickDetector)
+        local eggShops = {
+            workspace:FindFirstChild("EggShop"),
+            workspace:FindFirstChild("PetShop"),
+            workspace:FindFirstChild("Pet Store"),
+            workspace:FindFirstChild("Eggs")
+        }
+        
+        for _, shop in ipairs(eggShops) do
+            if shop then
+                local clickDetector = shop:FindFirstChildOfClass("ClickDetector")
+                if clickDetector then
+                    fireclickdetector(clickDetector)
+                    Status.Text = "Покупка яиц..."
+                    wait(1)
+                end
             end
         end
+        
+        Status.Text = "Покупка завершена ✅"
     end)
 end
 
--- Кнопка авто-покупки
+-- Кнопка покупки
 local BuyButton = Instance.new("TextButton")
 BuyButton.Parent = Frame
-BuyButton.Size = UDim2.new(0, 90, 0, 25)
-BuyButton.Position = UDim2.new(0, 25, 0, 145)
-BuyButton.Text = "🛒 Купить"
+BuyButton.Size = UDim2.new(0, 100, 0, 25)
+BuyButton.Position = UDim2.new(0, 20, 0, 165)
+BuyButton.Text = "🛒 КУПИТЬ"
 BuyButton.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
 BuyButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 BuyButton.TextSize = 12
@@ -176,7 +229,7 @@ local BuyCorner = Instance.new("UICorner")
 BuyCorner.Parent = BuyButton
 BuyCorner.CornerRadius = UDim.new(0, 4)
 
-BuyButton.MouseButton1Click:Connect(autoBuy)
+BuyButton.MouseButton1Click:Connect(buyItems)
 
 -- Перемещение интерфейса
 local dragging = false
@@ -209,4 +262,13 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
     end
 end)
 
-print("🐸 FroggiDupe загружен! Просто нажми 'Запустить Дюп'")
+-- Анти-афк
+local VirtualUser = game:GetService("VirtualUser")
+Player.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+end)
+
+print("🐸 FroggiDupe REAL by BloodEyEs-Hacker загружен!")
+print("🔄 Настоящий дюп с клонированием предметов")
+print("📦 Создает копии фруктов, семян и питомцев")
